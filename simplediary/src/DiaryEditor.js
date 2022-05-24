@@ -1,6 +1,9 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 const DiaryEditor = () => {
+  //React.MutableRefObject가 저장됨. 이건 html 돔요소를 접근할 수 있는 기능
+  const authorInput = useRef();
+  const contentInput = useRef();
   const [state, setState] = useState({
     author: '',
     content: '',
@@ -15,7 +18,18 @@ const DiaryEditor = () => {
   };
 
   const handleSubmit = () => {
-    console.log(state);
+    if (state.author.length < 1) {
+      // 참조 객체 DOM 요소를 선택하는 useRef로 생성한 참조 객체는 현재 가리키는 객체를 current로 불러올 수 있다.
+      // 따라서 authorInput이라는 태그에 focus 기능을 이용해서 focus를 줬다.
+      authorInput.current.focus();
+      return;
+    }
+
+    if (state.content.length < 5) {
+      contentInput.current.focus();
+      return;
+    }
+
     alert('저장 성공!');
   };
 
@@ -24,6 +38,7 @@ const DiaryEditor = () => {
       <h2>오늘의 일기</h2>
       <div>
         <input
+          ref={authorInput}
           value={state.author}
           onChange={handleChangeState}
           name="author"
@@ -33,6 +48,7 @@ const DiaryEditor = () => {
       </div>
       <div>
         <textarea
+          ref={contentInput}
           value={state.content}
           onChange={handleChangeState}
           name="content"
