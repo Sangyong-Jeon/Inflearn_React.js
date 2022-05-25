@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 
-const DiaryEditor = () => {
+const DiaryEditor = ({ onCreate }) => {
   //React.MutableRefObject가 저장됨. 이건 html 돔요소를 접근할 수 있는 기능
   const authorInput = useRef();
   const contentInput = useRef();
@@ -30,7 +30,13 @@ const DiaryEditor = () => {
       return;
     }
 
+    onCreate(state.author, state.content, state.emotion);
     alert('저장 성공!');
+    setState({
+      author: '',
+      content: '',
+      emotion: 1,
+    });
   };
 
   return (
