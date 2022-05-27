@@ -5,9 +5,10 @@ import App from './App';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+  // 스트릭트 모드는 리액트 개발 도중 발생하는 문제를 감지하기 위한 설정으로 해당 설정 시 개발모드일 때만 렌더링이 2번 발생된다.
+  // <React.StrictMode>
+  <App />
+  // </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
