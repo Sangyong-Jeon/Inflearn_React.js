@@ -99,6 +99,7 @@ function App() {
     );
   };
 
+  // 연산 최적화 useMemo, 이 때 함수가 아니라 값으로 반환하는것에 유의하기
   const getDiaryAnalysis = useMemo(() => {
     console.log('일기 분석 시작');
 
@@ -107,9 +108,11 @@ function App() {
     const badCount = data.length - goodCount;
     const goodRatio = (goodCount / data.length) * 100;
     return { goodCount, badCount, goodRatio };
-  }, [data.length]);
+  }, [data.length]); //data.length가 변화할때만 getDiaryAnalysis()가 다시 연산하여 결과를 리턴한다.
+  // 만약 변하지 않는다면 연산하지않고 기억해놓은 결과값만 반환한다.
+  // 동작방식은 useEffect와 동일하지만 useEffect처럼 사용하면 안된다.
 
-  const { goodCount, badCount, goodRatio } = getDiaryAnalysis;
+  const { goodCount, badCount, goodRatio } = getDiaryAnalysis; // 함수가 아닌 값으로 사용
 
   return (
     <div className="App">
