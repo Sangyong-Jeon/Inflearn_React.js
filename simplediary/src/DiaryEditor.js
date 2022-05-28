@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 const DiaryEditor = ({ onCreate }) => {
   //React.MutableRefObject가 저장됨. 이건 html 돔요소를 접근할 수 있는 기능
@@ -82,4 +82,4 @@ const DiaryEditor = ({ onCreate }) => {
     </div>
   );
 };
-export default DiaryEditor;
+export default React.memo(DiaryEditor);

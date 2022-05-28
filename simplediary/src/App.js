@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import './App.css';
 import DiaryEditor from './DiaryEditor';
 import DiaryList from './DiaryList';
@@ -72,7 +72,7 @@ function App() {
     getData();
   }, []);
 
-  const onCreate = (author, content, emotion) => {
+  const onCreate = useCallback((author, content, emotion) => {
     const created_date = new Date().getTime();
     const newItem = {
       author,
@@ -82,21 +82,20 @@ function App() {
       id: dataId.current, // useRef(0)로 인해 0을 가리킴
     };
     dataId.current += 1;
-    setData([newItem, ...data]);
-  };
+    setData((data) => [newItem, ...data]); // (data)를 안넣으면 처음 마운트한 빈배열값으로만 기억하기에 꼭 넣어야함.
+  }, []); // 마운트 할 때 1번 사용하고 그 후 재사용하므로 DiaryEditor는 재렌더링 안됨.
 
-  const onRemove = (targetId) => {
-    const newDiaryList = data.filter((it) => it.id !== targetId);
-    setData(newDiaryList);
-  };
+  const onRemove = useCallback((targetId) => {
+    setData((data) => data.filter((it) => it.id !== targetId)); // 최신 state를 사용하기 위해 data를 적어 사용한다.
+  }, []);
 
-  const onEdit = (targetId, newContent) => {
-    setData(
+  const onEdit = useCallback((targetId, newContent) => {
+    setData((data) =>
       data.map((it) =>
         it.id === targetId ? { ...it, content: newContent } : it
       )
     );
-  };
+  }, []);
 
   // 연산 최적화 useMemo, 이 때 함수가 아니라 값으로 반환하는것에 유의하기
   const getDiaryAnalysis = useMemo(() => {
