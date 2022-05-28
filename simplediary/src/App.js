@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import './App.css';
 import DiaryEditor from './DiaryEditor';
 import DiaryList from './DiaryList';
-import OptimizeTest from './OptimizeTest';
 // 리액트 라이프사이클 연습용 컴포넌트
 // import Lifecycle from './Lifecycle';
 
@@ -114,7 +113,7 @@ function App() {
 
   return (
     <div className="App">
-      <OptimizeTest />
+      {/* <OptimizeTest /> */}
       {/* <Lifecycle /> */}
       <DiaryEditor onCreate={onCreate} />
       <div>전체 일기 : {data.length}</div>
