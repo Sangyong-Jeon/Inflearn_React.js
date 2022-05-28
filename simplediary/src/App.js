@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import './App.css';
 import DiaryEditor from './DiaryEditor';
 import DiaryList from './DiaryList';
+import OptimizeTest from './OptimizeTest';
 // 리액트 라이프사이클 연습용 컴포넌트
 // import Lifecycle from './Lifecycle';
 
@@ -86,7 +87,6 @@ function App() {
   };
 
   const onRemove = (targetId) => {
-    console.log(`${targetId}가 삭제되었습니다.`);
     const newDiaryList = data.filter((it) => it.id !== targetId);
     setData(newDiaryList);
   };
@@ -101,8 +101,6 @@ function App() {
 
   // 연산 최적화 useMemo, 이 때 함수가 아니라 값으로 반환하는것에 유의하기
   const getDiaryAnalysis = useMemo(() => {
-    console.log('일기 분석 시작');
-
     // filter는 조건에 해당하는 것들을 반환해준다. 따라서 아래는 data의 값들 중 emotion이 3이상인 것들을 모아서 반환해준다.
     const goodCount = data.filter((it) => it.emotion >= 3).length;
     const badCount = data.length - goodCount;
@@ -116,6 +114,7 @@ function App() {
 
   return (
     <div className="App">
+      <OptimizeTest />
       {/* <Lifecycle /> */}
       <DiaryEditor onCreate={onCreate} />
       <div>전체 일기 : {data.length}</div>
