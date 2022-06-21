@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useReducer } from 'react';
 import './App.css';
 import DiaryEditor from './DiaryEditor';
 import DiaryList from './DiaryList';
@@ -38,8 +38,37 @@ import DiaryList from './DiaryList';
 
 // https://jsonplaceholder.typicode.com/comments
 
+const reducer = (state, action) => {
+  // 첫번째 파라미터는 상태변화가 일어나기 직전의 상태(state), 두번째는 어떤 상태변화를 일으켜야하는지 정보가 있는 액션 객체
+  switch (action.type) {
+    case 'INIT': {
+      return action.data;
+    }
+    case 'CREATE': {
+      const created_date = new Date().getTime();
+      const newItem = {
+        ...action.data, // 스프레드 연산자로 펼쳐줌
+        created_date,
+      };
+      return [newItem, ...state];
+    }
+    case 'REMOVE': {
+      return state.filter((it) => it.id !== action.targetId);
+    }
+    case 'EDIT': {
+      return state.map((it) =>
+        it.id === action.targetId ? { ...it, content: action.newContent } : it
+      );
+    }
+    default:
+      return state;
+  }
+};
+
 function App() {
-  const [data, setData] = useState([]);
+  // const [data, setData] = useState([]);
+
+  const [data, dispatch] = useReducer(reducer, []); // 항상 상태변화 함수는 dispatch로 적기
 
   const dataId = useRef(0);
 
@@ -65,36 +94,41 @@ function App() {
       };
     });
 
-    setData(initData);
+    dispatch({ type: 'INIT', data: initData });
+    // setData(initData); -> 이제 reducer가 하니까 지움
   };
 
   useEffect(() => {
     getData();
   }, []);
 
+  // useCallback으로 두번째 인자인 []은 마운트 될 때 1번이라는 의미로, 즉 첫번째 인자인 함수를 1번만 만들어서 재사용한다는 의미
   const onCreate = useCallback((author, content, emotion) => {
-    const created_date = new Date().getTime();
-    const newItem = {
-      author,
-      content,
-      emotion,
-      created_date,
-      id: dataId.current, // useRef(0)로 인해 0을 가리킴
-    };
+    dispatch({
+      type: 'CREATE',
+      data: {
+        author,
+        content,
+        emotion,
+        id: dataId.current, // useRef(0)로 인해 0을 가리킴
+      },
+    });
     dataId.current += 1;
-    setData((data) => [newItem, ...data]); // (data)를 안넣으면 처음 마운트한 빈배열값으로만 기억하기에 꼭 넣어야함.
+    // setData((data) => [newItem, ...data]); // (data)를 안넣으면 처음 마운트한 빈배열값으로만 기억하기에 꼭 넣어야함.
   }, []); // 마운트 할 때 1번 사용하고 그 후 재사용하므로 DiaryEditor는 재렌더링 안됨.
 
   const onRemove = useCallback((targetId) => {
-    setData((data) => data.filter((it) => it.id !== targetId)); // 최신 state를 사용하기 위해 data를 적어 사용한다.
+    dispatch({ type: 'REMOVE', targetId });
+    // setData((data) => data.filter((it) => it.id !== targetId)); // 최신 state를 사용하기 위해 data를 적어 사용한다.
   }, []);
 
   const onEdit = useCallback((targetId, newContent) => {
-    setData((data) =>
-      data.map((it) =>
-        it.id === targetId ? { ...it, content: newContent } : it
-      )
-    );
+    dispatch({ type: 'EDIT', targetId, newContent });
+    // setData((data) =>
+    //   data.map((it) =>
+    //     it.id === targetId ? { ...it, content: newContent } : it
+    //   )
+    // );
   }, []);
 
   // 연산 최적화 useMemo, 이 때 함수가 아니라 값으로 반환하는것에 유의하기
