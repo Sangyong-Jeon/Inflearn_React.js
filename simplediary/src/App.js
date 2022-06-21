@@ -114,7 +114,7 @@ function App() {
       },
     });
     dataId.current += 1;
-    // setData((data) => [newItem, ...data]); // (data)를 안넣으면 처음 마운트한 빈배열값으로만 기억하기에 꼭 넣어야함.
+    // setData((data) => [newItem, ...data]); // 함수형 업데이트방식으로 (data)를 인자로 안넣으면 처음 마운트한 빈배열값(초기값)으로만 기억하기에 꼭 넣어야함.
   }, []); // 마운트 할 때 1번 사용하고 그 후 재사용하므로 DiaryEditor는 재렌더링 안됨.
 
   const onRemove = useCallback((targetId) => {
