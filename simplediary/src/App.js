@@ -1,4 +1,10 @@
-import { useCallback, useEffect, useMemo, useRef, useReducer } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useReducer,
+} from 'react';
 import './App.css';
 import DiaryEditor from './DiaryEditor';
 import DiaryList from './DiaryList';
@@ -31,6 +37,11 @@ const reducer = (state, action) => {
       return state;
   }
 };
+
+// 파일1개당 export 여러개 가능. 이거는 비구조화 할당으로 import 받을 수 있음. 예) import { DiaryStateContext } from 'App.js';
+export const DiaryStateContext = React.createContext();
+
+export const DiaryDispatchContext = React.createContext();
 
 function App() {
   const [data, dispatch] = useReducer(reducer, []); // 항상 상태변화 함수는 dispatch로 적기
@@ -87,6 +98,11 @@ function App() {
     dispatch({ type: 'EDIT', targetId, newContent });
   }, []);
 
+  // useMemo를 안쓰면 앱 컴포넌트가 재생성될 때 이 momoizedDispatches가 재생성된다.
+  const memoizedDispatches = useMemo(() => {
+    return { onCreate, onRemove, onEdit };
+  }, []);
+
   // 연산 최적화 useMemo, 이 때 함수가 아니라 값으로 반환하는것에 유의하기
   const getDiaryAnalysis = useMemo(() => {
     // filter는 조건에 해당하는 것들을 반환해준다. 따라서 아래는 data의 값들 중 emotion이 3이상인 것들을 모아서 반환해준다.
@@ -101,17 +117,21 @@ function App() {
   const { goodCount, badCount, goodRatio } = getDiaryAnalysis; // 함수가 아닌 값으로 사용
 
   return (
-    <div className="App">
-      {/* <OptimizeTest /> */}
-      {/* <Lifecycle /> */}
-      <DiaryEditor onCreate={onCreate} />
-      <div>전체 일기 : {data.length}</div>
-      <div>기분 좋은 일기 개수 : {goodCount}</div>
-      <div>기분 나쁜 일기 개수 : {badCount}</div>
-      <div>기분 좋은 일기 비율 : {goodRatio}</div>
-      <DiaryList onEdit={onEdit} onRemove={onRemove} diaryList={data} />
-    </div>
+    <DiaryStateContext.Provider value={data}>
+      <DiaryDispatchContext.Provider value={memoizedDispatches}>
+        <div className="App">
+          {/* <OptimizeTest /> */}
+          {/* <Lifecycle /> */}
+          <DiaryEditor />
+          <div>전체 일기 : {data.length}</div>
+          <div>기분 좋은 일기 개수 : {goodCount}</div>
+          <div>기분 나쁜 일기 개수 : {badCount}</div>
+          <div>기분 좋은 일기 비율 : {goodRatio}</div>
+          <DiaryList />
+        </div>
+      </DiaryDispatchContext.Provider>
+    </DiaryStateContext.Provider>
   );
 }
 
-export default App;
+export default App; // 파일 1개당 export default 1개만 가능. 이건 import 할 때 아무 이름으로 받을 수 있음. 예) import abc from 'App.js';
