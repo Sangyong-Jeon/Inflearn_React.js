@@ -66,10 +66,7 @@ const reducer = (state, action) => {
 };
 
 function App() {
-  // const [data, setData] = useState([]);
-
   const [data, dispatch] = useReducer(reducer, []); // 항상 상태변화 함수는 dispatch로 적기
-
   const dataId = useRef(0);
 
   // javascript api 내장 객체인 fetch 사용
@@ -95,7 +92,6 @@ function App() {
     });
 
     dispatch({ type: 'INIT', data: initData });
-    // setData(initData); -> 이제 reducer가 하니까 지움
   };
 
   useEffect(() => {
@@ -114,21 +110,14 @@ function App() {
       },
     });
     dataId.current += 1;
-    // setData((data) => [newItem, ...data]); // 함수형 업데이트방식으로 (data)를 인자로 안넣으면 처음 마운트한 빈배열값(초기값)으로만 기억하기에 꼭 넣어야함.
   }, []); // 마운트 할 때 1번 사용하고 그 후 재사용하므로 DiaryEditor는 재렌더링 안됨.
 
   const onRemove = useCallback((targetId) => {
     dispatch({ type: 'REMOVE', targetId });
-    // setData((data) => data.filter((it) => it.id !== targetId)); // 최신 state를 사용하기 위해 data를 적어 사용한다.
   }, []);
 
   const onEdit = useCallback((targetId, newContent) => {
     dispatch({ type: 'EDIT', targetId, newContent });
-    // setData((data) =>
-    //   data.map((it) =>
-    //     it.id === targetId ? { ...it, content: newContent } : it
-    //   )
-    // );
   }, []);
 
   // 연산 최적화 useMemo, 이 때 함수가 아니라 값으로 반환하는것에 유의하기
