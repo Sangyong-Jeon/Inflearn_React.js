@@ -1,3 +1,107 @@
-.App{
-  padding: 20px;
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Yeon+Sung&display=swap');
+
+
+body{
+  background-color: #f6f6f6;
+  display: flex;
+  justify-content: center; /* <body>태그 아래에 있는 요소들을 <body> 태그를 기준으로 전부 가운데 나둠 */
+  align-items: center; /* display가 flex일 때 세로축을 기준으로 가운데 두겠다는 의미 */
+  font-family: "Nanum Pen Script"; /* <body>태그 안에 요소들의 폰트를 디폴트값으로 "Nunum Pen Script"로 설정 */
+  min-height: 100vh; /* 현재 웹브라우저 스크린의 실제 크기의 100%를 최소크기로 갖겠다. */
+  margin: 0px; /* 기본적으로 margin이 있기때문에 0으로 만들면 화면을 전체 꽉차게 사용함 */
+}
+
+/* 웹 브라우저 스크린이 650px 이상일 때만 아래 css 적용 */
+@media (min-width : 650px){
+  .App{
+    width: 640px;
+  }
+}
+
+/* 웹 브라우저 스크린이 650px 이하일 때만 아래 css 적용 */
+@media (max-width : 650px) {
+  .App {
+    width: 90vw; /* class='App'인 요소는 현재 웹브라우저 스크린에서 90%를 넓이로 설정 */
+  }
+}
+
+/* id가 root를 가지고 있는 요소는 아래 css 적용 */
+#root {
+  background-color: white;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+/* class='App'인 요소 */
+.App {
+  min-height: 100vh; /* 최소값이 화면의 100%를 가지는 높이로 설정한다.  */
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+/* === MyButton === */
+
+.MyButton {
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+
+  font-size: 18px;
+
+  white-space: nowrap; /* 버튼 안의 글자가 잘려서 2줄이 되지않게 만드는 속성 */
+  font-family: "Nanum Pen Script";
+}
+
+.MyButton_default {
+  background-color: #ececec;
+  color: black;
+}
+
+.MyButton_positive {
+  background-color: #64c964;
+  color: white;
+}
+
+.MyButton_negative {
+  background-color: #fd565f;
+  color: white;
+}
+
+/* === HEADER === */
+
+header {
+  padding-top: 20px;
+  padding-bottom: 20px;
+
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #e2e2e2;
+}
+
+header > div {
+  display: flex;
+}
+
+header .head_text {
+  width: 50%;
+  font-size: 25px;
+  justify-content: center;
+}
+
+header .head_btn_left {
+  width: 25%;
+  justify-content: start; /* 시작점(제일 왼쪽)으로 붙임 */
+}
+
+header .head_btn_right {
+  width: 25%;
+  justify-content: end; /* 끝점(제일 오른쪽) 끝으로 붙임 */
+}
+
+header button {
+  font-family: "Nanum Pen Script";
 }
